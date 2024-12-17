@@ -1,5 +1,6 @@
 package com.twa.reservations.controller;
 
+import static com.twa.reservations.util.ReservationUtil.getReservationDTO;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,7 +36,9 @@ class ReservationControllerTest {
     @Test
     void getReservations_should_return_the_information() {
         // Given
-        List<ReservationDTO> reservations = Arrays.asList(new ReservationDTO(), new ReservationDTO());
+        List<ReservationDTO> reservations = Arrays.asList(getReservationDTO(1L, "BUE", "MIA"),
+                getReservationDTO(2L, "SCL", "MIA"));
+
         when(reservationService.getReservations()).thenReturn(reservations);
 
         // When
@@ -52,7 +55,7 @@ class ReservationControllerTest {
     void getReservation_should_return_the_information() {
         // Given
         Long id = 1L;
-        ReservationDTO reservationDTO = new ReservationDTO();
+        ReservationDTO reservationDTO = getReservationDTO(1L, "BUE", "MIA");
         when(reservationService.getReservationById(id)).thenReturn(reservationDTO);
 
         // When
@@ -86,16 +89,15 @@ class ReservationControllerTest {
     void update_should_return_the_information() {
         // Given
         Long id = 1L;
-        ReservationDTO inputReservation = new ReservationDTO();
-        ReservationDTO updatedReservation = new ReservationDTO();
-        when(reservationService.update(id, inputReservation)).thenReturn(updatedReservation);
+        ReservationDTO inputReservation = getReservationDTO(1L, "BUE", "MIA");
+        when(reservationService.update(id, inputReservation)).thenReturn(inputReservation);
 
         // When
         ResponseEntity<ReservationDTO> response = reservationController.update(id, inputReservation);
 
         // Then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(updatedReservation);
+        assertThat(response.getBody()).isEqualTo(inputReservation);
         verify(reservationService, times(1)).update(id, inputReservation);
     }
 

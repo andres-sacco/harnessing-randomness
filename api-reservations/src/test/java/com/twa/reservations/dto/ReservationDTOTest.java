@@ -33,22 +33,18 @@ class ReservationDTOTest {
     @Test
     void should_fail_when_passengers_list_is_empty() {
         // Given
-        Model<SegmentDTO> segmentModel = Instancio.of(SegmentDTO.class)
-                .set(field(SegmentDTO::getOrigin), "NYC")
+        Model<SegmentDTO> segmentModel = Instancio.of(SegmentDTO.class).set(field(SegmentDTO::getOrigin), "NYC")
                 .set(field(SegmentDTO::getDestination), "LAX")
                 .set(field(SegmentDTO::getDeparture), "2024-07-01T10:00:00")
-                .set(field(SegmentDTO::getArrival), "2024-07-01T14:00:00")
-                .set(field(SegmentDTO::getCarrier), "AA")
+                .set(field(SegmentDTO::getArrival), "2024-07-01T14:00:00").set(field(SegmentDTO::getCarrier), "AA")
                 .toModel();
 
         ItineraryDTO itinerary = Instancio.of(ItineraryDTO.class)
-                .set(field(ItineraryDTO::getSegment), List.of(Instancio.create(segmentModel)))
-                .create();
+                .set(field(ItineraryDTO::getSegment), List.of(Instancio.create(segmentModel))).create();
 
         ReservationDTO reservation = Instancio.of(ReservationDTO.class)
                 .set(field(ReservationDTO::getPassengers), Collections.emptyList()) // Set an empty list
-                .set(field(ReservationDTO::getItinerary), itinerary)
-                .create();
+                .set(field(ReservationDTO::getItinerary), itinerary).create();
 
         // When
         Set<ConstraintViolation<ReservationDTO>> violations = validator.validate(reservation);
@@ -63,30 +59,23 @@ class ReservationDTOTest {
     @Test
     void should_pass_when_passengers_are_provided() {
         // Given
-        Model<SegmentDTO> segmentModel = Instancio.of(SegmentDTO.class)
-                .set(field(SegmentDTO::getOrigin), "NYC")
+        Model<SegmentDTO> segmentModel = Instancio.of(SegmentDTO.class).set(field(SegmentDTO::getOrigin), "NYC")
                 .set(field(SegmentDTO::getDestination), "LAX")
                 .set(field(SegmentDTO::getDeparture), "2024-07-01T10:00:00")
-                .set(field(SegmentDTO::getArrival), "2024-07-01T14:00:00")
-                .set(field(SegmentDTO::getCarrier), "AA")
+                .set(field(SegmentDTO::getArrival), "2024-07-01T14:00:00").set(field(SegmentDTO::getCarrier), "AA")
                 .toModel();
 
         ItineraryDTO itinerary = Instancio.of(ItineraryDTO.class)
-                .set(field(ItineraryDTO::getSegment), List.of(Instancio.create(segmentModel)))
-                .create();
+                .set(field(ItineraryDTO::getSegment), List.of(Instancio.create(segmentModel))).create();
 
-        PassengerDTO passenger = Instancio.of(PassengerDTO.class)
-                .set(field(PassengerDTO::getFirstName), "John")
-                .set(field(PassengerDTO::getLastName), "Doe")
-                .set(field(PassengerDTO::getDocumentNumber), "12345678")
+        PassengerDTO passenger = Instancio.of(PassengerDTO.class).set(field(PassengerDTO::getFirstName), "John")
+                .set(field(PassengerDTO::getLastName), "Doe").set(field(PassengerDTO::getDocumentNumber), "12345678")
                 .set(field(PassengerDTO::getDocumentType), "Passport")
-                .set(field(PassengerDTO::getBirthday), gen().temporal().localDate().past().get())
-                .create();
+                .set(field(PassengerDTO::getBirthday), gen().temporal().localDate().past().get()).create();
 
         ReservationDTO reservation = Instancio.of(ReservationDTO.class)
                 .set(field(ReservationDTO::getPassengers), List.of(passenger))
-                .set(field(ReservationDTO::getItinerary), itinerary)
-                .create();
+                .set(field(ReservationDTO::getItinerary), itinerary).create();
         // When
         Set<ConstraintViolation<ReservationDTO>> violations = validator.validate(reservation);
 
@@ -99,13 +88,10 @@ class ReservationDTOTest {
         // Given
         ReservationDTO reservation = new ReservationDTO();
 
-        PassengerDTO passenger = Instancio.of(PassengerDTO.class)
-                .set(field(PassengerDTO::getFirstName), "John")
-                .set(field(PassengerDTO::getLastName), "Doe")
-                .set(field(PassengerDTO::getDocumentNumber), "12345678")
+        PassengerDTO passenger = Instancio.of(PassengerDTO.class).set(field(PassengerDTO::getFirstName), "John")
+                .set(field(PassengerDTO::getLastName), "Doe").set(field(PassengerDTO::getDocumentNumber), "12345678")
                 .set(field(PassengerDTO::getDocumentType), "Passport")
-                .set(field(PassengerDTO::getBirthday), gen().temporal().localDate().past().get())
-                .create();
+                .set(field(PassengerDTO::getBirthday), gen().temporal().localDate().past().get()).create();
 
         reservation.setPassengers(List.of(passenger));
         reservation.setItinerary(null);

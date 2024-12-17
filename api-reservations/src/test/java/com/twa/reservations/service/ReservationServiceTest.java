@@ -16,8 +16,7 @@ import org.springframework.core.convert.ConversionService;
 
 import java.util.Optional;
 
-import static com.twa.reservations.util.ReservationUtil.getReservation;
-import static com.twa.reservations.util.ReservationUtil.getReservationDTO;
+import static com.twa.reservations.util.ReservationUtil.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -63,7 +62,7 @@ class ReservationServiceTest {
         verify(conversionService, Mockito.atMostOnce()).convert(reservationModel, ReservationDTO.class);
         verify(catalogConnector, Mockito.never()).getCity(any());
 
-        assertAll(() -> assertNotNull(result), () -> assertEquals(getReservationDTO(1L, "BUE", "MAD"), result));
+        assertAll(() -> assertNotNull(result), () -> assertEquals(reservationDTO, result));
     }
 
     @DisplayName("should return remove a reservation")
@@ -98,15 +97,14 @@ class ReservationServiceTest {
         Reservation reservationModel = getReservation(1L, "BUE", "MAD");
         when(repository.save(reservationModel)).thenReturn(reservationModel);
 
-        ReservationDTO reservationDTO = getReservationDTO(1L, "BUE", "MAD");
+        ReservationDTO reservationDTO = getReservationDTO(null, "BUE", "MAD");
         when(conversionService.convert(reservationModel, ReservationDTO.class)).thenReturn(reservationDTO);
-        when(conversionService.convert(getReservationDTO(null, "BUE", "MAD"), Reservation.class))
-                .thenReturn(reservationModel);
+        when(conversionService.convert(reservationDTO, Reservation.class)).thenReturn(reservationModel);
 
         when(catalogConnector.getCity(any())).thenReturn(new CityDTO());
 
         // When
-        ReservationDTO reservation = service.save(getReservationDTO(null, "BUE", "MAD"));
+        ReservationDTO reservation = service.save(reservationDTO);
 
         // Then
         assertAll(() -> assertNotNull(reservation),
@@ -127,11 +125,10 @@ class ReservationServiceTest {
 
         ReservationDTO reservationDTO = getReservationDTO(1L, "BUE", "MIA");
         when(conversionService.convert(reservationModel, ReservationDTO.class)).thenReturn(reservationDTO);
-        when(conversionService.convert(getReservationDTO(1L, "BUE", "MIA"), Reservation.class))
-                .thenReturn(reservationModel);
+        when(conversionService.convert(reservationDTO, Reservation.class)).thenReturn(reservationModel);
 
         // When
-        ReservationDTO reservation = service.update(1L, getReservationDTO(1L, "BUE", "MIA"));
+        ReservationDTO reservation = service.update(1L, reservationDTO);
 
         // Then
         assertAll(() -> assertNotNull(reservation),
