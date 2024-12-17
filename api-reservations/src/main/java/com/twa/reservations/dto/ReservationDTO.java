@@ -2,6 +2,7 @@ package com.twa.reservations.dto;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -15,6 +16,7 @@ public class ReservationDTO {
     private List<PassengerDTO> passengers;
 
     @Valid
+    @NotNull(message = "You need an itinerary")
     private ItineraryDTO itinerary;
 
     public List<PassengerDTO> getPassengers() {
